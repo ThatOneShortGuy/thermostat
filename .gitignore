@@ -1,0 +1,3 @@
+target/
+thermostat-client/
+*sqlite*

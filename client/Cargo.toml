@@ -1,0 +1,12 @@
+[package]
+name = "client"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+physics_test = { workspace = true }
+
+anyhow = { version = "1.0.*", features = ["backtrace"] }
+bme280 = "0.5.1"
+bme280-multibus = "0.5"
+linux-embedded-hal = "0.4"
