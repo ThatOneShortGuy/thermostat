@@ -4,6 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+server-core = { path = "../server-core", features = ["server"] }
+
 anyhow = { workspace = true }
 axum = { workspace = true }
 typed_db = { workspace = true }
@@ -12,7 +14,6 @@ serde = { workspace = true }
 tracing = { workspace = true }
 physics_test = { workspace = true }
 chrono = { workspace = true }
-
 
 tokio = { version = "1.44.*", features = ["full", "tracing"] }
 tower = { version = "0.5.*", features = ["tokio", "tracing"] }

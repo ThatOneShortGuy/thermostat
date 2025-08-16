@@ -1,0 +1,13 @@
+[Unit]
+Description=Thermostat Server
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/home/worker/thermostat
+ExecStart=/bin/bash ./run_server.sh
+SyslogIdentifier=thermostat
+
+[Install]
+WantedBy=multi-user.target

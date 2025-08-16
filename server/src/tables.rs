@@ -1,39 +1,14 @@
 use anyhow::Result;
 use chrono::prelude::*;
-use physics_units::{TemperatureTrait, temperatures::Kelvin};
-use rusqlite::{Connection, ToSql, types::FromSql};
+use physics_units::TemperatureTrait;
+use rusqlite::Connection;
+use server_core::Temperature;
 use tokio::sync::Mutex;
 use typed_db::prelude::*;
 
-type Id = i64;
+use crate::seeders;
 
-#[derive(Debug, Clone, Copy)]
-pub struct Temperature(physics_units::temperatures::Temperature<Kelvin>);
-
-impl Default for Temperature {
-    fn default() -> Self {
-        Self(Kelvin::new(0.0))
-    }
-}
-
-impl ToSql for Temperature {
-    fn to_sql(&self) -> rusqlite::Result<rusqlite::types::ToSqlOutput<'_>> {
-        self.0.0.0.to_sql()
-    }
-}
-
-impl FromSql for Temperature {
-    fn column_result(value: rusqlite::types::ValueRef<'_>) -> rusqlite::types::FromSqlResult<Self> {
-        let f = f64::column_result(value)?;
-        Ok(Temperature(Kelvin::new(f)))
-    }
-}
-
-impl DbType for Temperature {
-    fn db_type() -> &'static str {
-        f64::db_type()
-    }
-}
+type Id = i32;
 
 #[derive(Debug, Clone, DbTable)]
 #[allow(unused)]
@@ -50,9 +25,36 @@ pub struct HouseTemperature {
 
 #[derive(Debug, Clone, DbTable)]
 #[allow(unused)]
+pub struct HousePressure {
+    #[primary_key]
+    pub id: Id,
+    #[foreign_key(Sensor::id)]
+    pub sensor_id: Id,
+    pub pressure: f32,
+    pub date_time: DateTime<Utc>,
+    #[default(CURRENT_TIMESTAMP)]
+    pub created_date: DateTime<Utc>,
+}
+
+#[derive(Debug, Clone, DbTable)]
+#[allow(unused)]
+pub struct HouseHumidity {
+    #[primary_key]
+    pub id: Id,
+    #[foreign_key(Sensor::id)]
+    pub sensor_id: Id,
+    pub humidity: f32,
+    pub date_time: DateTime<Utc>,
+    #[default(CURRENT_TIMESTAMP)]
+    pub created_date: DateTime<Utc>,
+}
+
+#[derive(Debug, Clone, DbTable)]
+#[allow(unused)]
 pub struct Sensor {
     #[primary_key]
     pub id: Id,
+    #[unique]
     pub name: String,
     pub active: bool,
     #[default(CURRENT_TIMESTAMP)]
@@ -64,6 +66,9 @@ pub async fn initialize_tables(conn: &Mutex<Connection>) -> Result<()> {
     let _enter = span.enter();
     let conn = conn.lock().await;
     Sensor::create_table(&conn)?;
+    seeders::sensors::sensors(&conn)?;
     HouseTemperature::create_table(&conn)?;
+    HouseHumidity::create_table(&conn)?;
+    HousePressure::create_table(&conn)?;
     Ok(())
 }

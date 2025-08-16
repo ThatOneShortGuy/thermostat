@@ -1,0 +1,12 @@
+[Unit]
+Description=Thermostat Server
+After=network.target
+
+[Service]
+Type=simple
+User=braxt
+ExecStart=/home/braxt/thermostat-client/client
+SyslogIdentifier=thermostat
+
+[Install]
+WantedBy=multi-user.target

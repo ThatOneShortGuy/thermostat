@@ -3,11 +3,11 @@ resolver = "3"
 members = [ "server","client", "server-core"]
 
 [workspace.dependencies]
-chrono = "*"
+chrono = { version = "*", features = ["serde"] }
 tracing = { version = "0.1.*", features = [] }
-anyhow = "1.0.*"
+anyhow = { version = "1.0.*", features = ["backtrace"] }
 serde = { version = "1.0.*", features = ["derive"] }
 typed_db = { git = "https://github.com/ThatOneShortGuy/typed_db.git", branch = "main" }
 rusqlite = { version = "0.*", features = ["bundled"] }
 axum = { version = "0.*", features = ["json", "macros", "query", "tracing"] }
-physics_test = { git = "https://github.com/ThatOneShortGuy/physics_test.git", branch = "main" }
+physics_test = { git = "ssh://git@github.com/ThatOneShortGuy/physics_test.git", branch = "main" }

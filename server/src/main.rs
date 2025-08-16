@@ -1,17 +1,20 @@
+mod controllers;
+mod error;
+mod seeders;
 mod tables;
 
 use std::sync::OnceLock;
 
+use axum::routing::post;
 use axum::{Router, routing::get};
 use rusqlite::Connection;
 use tokio::sync::Mutex;
 
 use anyhow::{Context, Result};
-use tower::ServiceBuilder;
-use tower_http::trace::TraceLayer;
 use tracing::Level;
 use tracing::info;
 
+use crate::controllers::data_handler;
 use crate::tables::initialize_tables;
 
 static DB_WRITER: OnceLock<Mutex<Connection>> = OnceLock::new();
@@ -30,7 +33,7 @@ fn get_db_writer() -> &'static Mutex<Connection> {
 #[macro_export]
 macro_rules! db_writer {
     () => {
-        crate::get_db_writer().lock().await.deref()
+        std::ops::Deref::deref(&crate::get_db_writer().lock().await)
     };
 }
 
@@ -58,7 +61,7 @@ async fn main() -> Result<()> {
 
     let routes = Router::new()
         .route("/hello", get(|| async { "Hello!" }))
-        .layer(ServiceBuilder::new().layer(TraceLayer::new_for_http()));
+        .route("/data", post(data_handler));
 
     let addr = tokio::net::TcpListener::bind("0.0.0.0:23564")
         .await

@@ -1,3 +1,4 @@
 target/
 thermostat-client/
 *sqlite*
+deploy-client.log
