@@ -12,5 +12,5 @@ chrono = { workspace = true }
 
 
 [features]
-# default = ["server"]
-server = ["rusqlite", "typed_db"]
+default = []
+server = ["dep:rusqlite", "dep:typed_db"]

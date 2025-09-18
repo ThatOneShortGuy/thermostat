@@ -11,3 +11,13 @@ typed_db = { git = "https://github.com/ThatOneShortGuy/typed_db.git", branch = "
 rusqlite = { version = "0.*", features = ["bundled"] }
 axum = { version = "0.*", features = ["json", "macros", "query", "tracing"] }
 physics_test = { git = "ssh://git@github.com/ThatOneShortGuy/physics_test.git", branch = "main" }
+tracing-subscriber = { version = "0.3.*", features = ["fmt", "env-filter"] }
+
+[profile.release]
+# lto = "fat"
+codegen-units = 1
+opt-level = 3
+strip = true
+panic = 'abort'
+debug = true
+

@@ -4,14 +4,16 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-server-core = { path = "../server-core" }
+server-core = { path = "../server-core", default-features = false }
 
 physics_test = { workspace = true }
 anyhow = { workspace = true }
 chrono = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
 
+rppal = "0.22.*"
 bme280 = "0.5.*"
 linux-embedded-hal = "0.4.*"
 ureq = { version = "3.0.*", features = ["json"]}
-# reqwest = { version = "0.12.*", features = ["blocking", "json"] }
-# openssl = { version = "0.10.*", features = ["vendored"] }
+

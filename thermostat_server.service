@@ -8,6 +8,7 @@ User=root
 WorkingDirectory=/home/worker/thermostat
 ExecStart=/bin/bash ./run_server.sh
 SyslogIdentifier=thermostat
+Restart=always
 
 [Install]
 WantedBy=multi-user.target

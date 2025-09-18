@@ -81,7 +81,7 @@ fi
 
 echo "==> Building (${PROFILE}) for ${TARGET} with cargo ..."
 # shellcheck disable=SC2086
-env ${LINKER_ENV} cargo build --bin "${BIN}" ${RELEASE_FLAG} --target "${TARGET}" || die "Build failed."
+env ${LINKER_ENV} cargo build -p "${BIN}" ${RELEASE_FLAG} --target "${TARGET}" || die "Build failed."
 
 if [[ ! -f "${ARTIFACT}" ]]; then
     cat >&2 <<EOF
@@ -101,7 +101,7 @@ echo "==> Copying \"${CLIENT_SERVICE}\" to \"${OUTDIR}/${CLIENT_SERVICE}\" ..."
 cp -f "${CLIENT_SERVICE}" "${OUTDIR}/${CLIENT_SERVICE}" || die "Copy failed."
 
 echo "==> Renaming remote file with .old"
-ssh "${REMOTE_HOST}" "sudo mv -f ./${OUTDIR}/* ${OUTDIR}.old" || echo "Oh well, continuing"
+ssh "${REMOTE_HOST}" "sudo rm -r ${OUTDIR}.old; sudo mv -f ./${OUTDIR} ${OUTDIR}.old" || echo "Oh well, continuing"
 
 echo "==> Uploading \"${OUTDIR}\" to ${REMOTE_HOST}:${REMOTE_DIR} ..."
 # keep REMOTE_DIR unquoted on the remote side so ~ expands there
